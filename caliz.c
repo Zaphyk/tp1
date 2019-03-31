@@ -4,7 +4,13 @@
 #define CAPACIDAD_MAGICA_REGULAR 'R'
 #define CAPACIDAD_MAGICA_BUENA 'B'
 #define CAPACIDAD_MAGICA_MALA 'M'
-#define MAX_INT 2147483647
+
+const int FUERZA_MAXIMA = 10;
+const int FUERZA_MINIMA = 0;
+const int INTELIGENCIA_MAXIMA = 10;
+const int INTELIGENCIA_MINIMA = 0;
+const int EDAD_MAXIMA = 2147483647;
+const int EDAD_MINIMA = 17;
 
 void recibir_numero(int* valor, int min, int max, char* mensaje, char* mensaje_de_error) {
     printf(mensaje);
@@ -50,33 +56,53 @@ void recibir_capacidad_magica(int* capacidad_magica) {
 }
 
 void recibir_estudiante(int* edad, int* inteligencia, int* fuerza, int* capacidad_magica) {
-    recibir_numero(edad, 17, MAX_INT, "Ingresa la edad del estudiante:\n", "Dato invalido. El valor a ingresar debe ser mayor que %d\n");
-    recibir_atributo(inteligencia, 0, 10, "Ingresa la inteligencia del estudiante:\n");
-    recibir_atributo(fuerza, 0, 10, "Ingresa la fuerza del estudiante:\n");
+    recibir_numero(edad, EDAD_MINIMA, EDAD_MAXIMA, "Ingresa la edad del estudiante:\n", "Dato invalido. El valor a ingresar debe ser mayor que %d\n");
+    recibir_atributo(inteligencia, INTELIGENCIA_MINIMA, INTELIGENCIA_MAXIMA, "Ingresa la inteligencia del estudiante:\n");
+    recibir_atributo(fuerza, FUERZA_MINIMA, FUERZA_MAXIMA, "Ingresa la fuerza del estudiante:\n");
     recibir_capacidad_magica(capacidad_magica);
 }
 
-bool hacer_campeon(int* campeon_id, int* campeon_inteligencia, int* campeon_fuerza, int* campeon_capacidad_magica, int id, int inteligencia, int fuerza, int capacidad_magica) {
+void hacer_campeon(int* campeon_id, int* campeon_inteligencia, int* campeon_fuerza, int* campeon_capacidad_magica, int id, int inteligencia, int fuerza, int capacidad_magica) {
     (*campeon_id) = id;
     (*campeon_inteligencia) = inteligencia;
     (*campeon_fuerza) = fuerza;
     (*campeon_capacidad_magica) = capacidad_magica;
-    return true;
 }
 
-bool comparar_atributo(int* campeon_id, int* campeon_inteligencia, int* campeon_fuerza, int* campeon_capacidad_magica, int id, int inteligencia, int fuerza, int capacidad_magica, int campeon_atributo, int atributo) {
+/*
+ * Devuelve true si el estudiante que se compara es mejor que el campeon
+ */
+bool comparar_atributo(int campeon_atributo, int atributo, bool* seguir_comparando) {
 
-    if (campeon_atributo < atributo) return hacer_campeon(campeon_id, campeon_inteligencia, campeon_fuerza, campeon_capacidad_magica, id, inteligencia, fuerza, capacidad_magica);
-    else if(campeon_atributo > atributo) return true;
+    if (campeon_atributo < atributo) {
+    	seguir_comparando = false;
+    	return true;
+    }
+    else if(campeon_atributo > atributo) {
+    	seguir_comparando = false;
+    	return false;
+    }
+    seguir_comparando = true;
     return false;
 }
 
 void comparar_estudiantes(int* campeon_id, int* campeon_inteligencia, int* campeon_fuerza, int* campeon_capacidad_magica, int id, int edad, int inteligencia, int fuerza, int capacidad_magica) {
 
     if (edad < 18) return;
-    if (comparar_atributo(campeon_id, campeon_inteligencia, campeon_fuerza, campeon_capacidad_magica, id, inteligencia, fuerza, capacidad_magica, (*campeon_inteligencia), inteligencia)) return;
-    if (comparar_atributo(campeon_id, campeon_inteligencia, campeon_fuerza, campeon_capacidad_magica, id, inteligencia, fuerza, capacidad_magica, (*campeon_fuerza), fuerza)) return;
-    if (comparar_atributo(campeon_id, campeon_inteligencia, campeon_fuerza, campeon_capacidad_magica, id, inteligencia, fuerza, capacidad_magica, (*campeon_capacidad_magica), capacidad_magica)) return;
+    
+    bool seguir_comparando = true;
+    
+    if (seguir_comparando && comparar_atributo((*campeon_inteligencia), inteligencia, &seguir_comparando)) {
+    	hacer_campeon(campeon_id, campeon_inteligencia, campeon_fuerza, campeon_capacidad_magica, id, inteligencia, fuerza, capacidad_magica);
+    }
+    
+    if (seguir_comparando && comparar_atributo((*campeon_fuerza), fuerza, &seguir_comparando)) {
+    	hacer_campeon(campeon_id, campeon_inteligencia, campeon_fuerza, campeon_capacidad_magica, id, inteligencia, fuerza, capacidad_magica);
+    }
+    
+    if (seguir_comparando && comparar_atributo((*campeon_capacidad_magica), capacidad_magica, &seguir_comparando)) {
+    	hacer_campeon(campeon_id, campeon_inteligencia, campeon_fuerza, campeon_capacidad_magica, id, inteligencia, fuerza, capacidad_magica);
+    }
 }
 
 void mostrar_campeon(int id) {

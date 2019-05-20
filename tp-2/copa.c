@@ -15,7 +15,6 @@ typedef struct direccion {
 
 /* Constantes del juego */
 
-const char CODIGO_COPA = 'C';
 const int VIDA_POR_TURNO = 3;
 const int INDICE_DERECHA = 0;
 const int INDICE_ABAJO = 1;
@@ -31,9 +30,8 @@ const direccion_t MOVIMIENTOS_DISPONIBLES[] =
 };
 
 /* Constantes del jugador */
-const char CODIGO_JUGADOR = 'J';
 const int DISTANCIA_MINIMA_COPA = 10;
-const int MAXIMA_VIDA_JUGADOR = 500;
+const int MAXIMA_VIDA_JUGADOR = 50;
 
 /* Constantes de los obstaculos */
 const int DANIO_ESGREGUTO = 20;
@@ -44,7 +42,6 @@ const int DANIO_BOGGART = 15;
 const int VIDA_POCION = 15;
 
 /* Constantes para el rival */
-const char CODIGO_RIVAL = 'G';
 const int RIVAL_CANTIDAD_PASOS = 4;
 
 /* Funciones de posicion y direccion auxiliares */
@@ -180,6 +177,7 @@ void mover_rival(juego_t* juego)
         direccion_t direccion = MOVIMIENTOS_DISPONIBLES[indice_direccion];
         x = juego->rival.posicion.fil + direccion.x;
         y = juego->rival.posicion.col + direccion.y;
+        /* Mantengo siempre la cantidad de pasos en el intervalo [0, 15] para evitar un overflow */
         juego->rival.cantidad_pasos = (juego->rival.cantidad_pasos + 1) % (RIVAL_CANTIDAD_PASOS * TOTAL_DIRECCIONES);
         juego->rival.direccion = direccion.tecla;
     }
@@ -245,8 +243,8 @@ void actualizar_obstaculos(juego_t* juego)
  */
 int estado_juego(juego_t juego)
 {
-    if (juego.jugador.posicion.fil == juego.copa.posicion.fil && juego.jugador.posicion.col == juego.copa.posicion.col) return 1;
-    if (juego.rival.posicion.fil == juego.copa.posicion.fil && juego.rival.posicion.col == juego.copa.posicion.col) return -1;
+    if (comparar_coordenadas(juego.jugador.posicion, juego.copa.posicion)) return 1;
+    if (comparar_coordenadas(juego.rival.posicion, juego.copa.posicion)) return -1;
     if (juego.jugador.vida <= 0) return -1;
     return 0;
 }

@@ -17,6 +17,9 @@
 #define CODIGO_ESCREGUTO 'E'
 #define CODIGO_ACROMANTULA 'A'
 #define CODIGO_BOGGART 'B'
+#define CODIGO_JUGADOR 'J'
+#define CODIGO_RIVAL 'G'
+#define CODIGO_COPA 'C'
 
 typedef struct coordenada {
     int fil;

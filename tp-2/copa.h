@@ -6,6 +6,17 @@
 #define VACIO ' '
 #define TOTAL_AYUDAS 10
 #define TOTAL_OBSTACULOS 10
+#define TECLA_ARRIBA 'w'
+#define TECLA_ABAJO 's'
+#define TECLA_IZQUIERDA 'a'
+#define TECLA_DERECHA 'd'
+#define CODIGO_ESFINGE 'F'
+#define CODIGO_IMPEDIMENTA 'I'
+#define CODIGO_RIDDIKULUS 'R'
+#define CODIGO_POCION 'P'
+#define CODIGO_ESCREGUTO 'E'
+#define CODIGO_ACROMANTULA 'A'
+#define CODIGO_BOGGART 'B'
 
 typedef struct coordenada {
     int fil;

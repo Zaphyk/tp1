@@ -6,20 +6,6 @@
 #define VACIO ' '
 #define TOTAL_AYUDAS 10
 #define TOTAL_OBSTACULOS 10
-#define TECLA_ARRIBA 'w'
-#define TECLA_ABAJO 's'
-#define TECLA_IZQUIERDA 'a'
-#define TECLA_DERECHA 'd'
-#define CODIGO_ESFINGE 'F'
-#define CODIGO_IMPEDIMENTA 'I'
-#define CODIGO_RIDDIKULUS 'R'
-#define CODIGO_POCION 'P'
-#define CODIGO_ESCREGUTO 'E'
-#define CODIGO_ACROMANTULA 'A'
-#define CODIGO_BOGGART 'B'
-#define CODIGO_JUGADOR 'J'
-#define CODIGO_RIVAL 'G'
-#define CODIGO_COPA 'C'
 
 typedef struct coordenada {
     int fil;
@@ -73,24 +59,36 @@ typedef struct juego{
 /*
  * Inicializará todas las estructuras con los valores correspondientes,
  * creará el laberinto, posicionará todos los elementos, etc.
+ *
+ * PRE CONDICIONES: Que el usuario ingrese un char valido
+ * POST CONDICIONES: Lee una tecla ingresada por el usuario
  */
 void inicializar_laberinto(juego_t* juego);
 
 /*
- * Determinará si el caracter ingresado es válido, esto es, es el caracter ‘a’ o 
- * ‘s’ o ‘d’ o ‘w’ y además el jugador puede moverse en esa dirección, o sea, 
+ * Determinará si el caracter ingresado es válido, esto es, es el caracter ‘a’ o
+ * ‘s’ o ‘d’ o ‘w’ y además el jugador puede moverse en esa dirección, o sea,
  * hay pasillo.
+ *
+ * PRE CONDICIONES: Que el usuario ingrese un char valido
+ * POST CONDICIONES: Lee una tecla ingresada por el usuario
  */
 bool es_movimiento_valido(juego_t* juego, char tecla);
 
 /*
  * Moverá el jugador hacia la dirección especificada.
  * Dicho movimiento es válido.
+ *
+ * PRE CONDICIONES: Que el movimiento sea valido
+ * POST CONDICIONES: Mueve al jugador
  */
 void mover_jugador(jugador_t* jugador, char direccion);
 
 /*
  * Moverá el rival a la próxima posición.
+ *
+ * PRE CONDICIONES: Que juego este inicializado y el rival en una posicion valida
+ * POST CONDICIONES: Mueve al rival
  */
 void mover_rival(juego_t* juego);
 
@@ -98,11 +96,17 @@ void mover_rival(juego_t* juego);
  * Actualizará el juego. Restará vida si el jugador está sobre un obstáculo
  * o lo eliminará si cuenta con el hechizo, aprenderá hechizos y todo lo
  * que pueda suceder luego de un turno.
+ *
+ * PRE CONDICIONES: Que juego este inicializado y sea valido
+ * POST CONDICIONES: Actualiza el juego, turno, ayudas y obstaculos
  */
 void actualizar_juego(juego_t* juego);
 
 /*
  * Devolverá el estado del juego, 1 ganado, 0 en curso, -1 perdido.
+ *
+ * PRE CONDICIONES: Que juego este inicializado y sea valido
+ * POST CONDICIONES: Devuelve un int que representa el estado del juego
  */
 int estado_juego(juego_t juego);
 
@@ -110,17 +114,26 @@ int estado_juego(juego_t juego);
  * Devolverá una coordenada aleatoria dentro del rango TAMANIOxTAMANIO.
  * No valida que dicha coordenada coincida con un pasillo ni que exista
  * otro objeto en esa posición.
+ *
+ * PRE CONDICIONES: Ninguna
+ * POST CONDICIONES: Devuelve una posicion aleatoria NO validada dentro del laberinto
  */
 coordenada_t posicion_aleatoria();
 
 /*
  * Actualizará la matriz mostrada al usuario, con los elementos presentes
  * en el juego.
+ *
+ * PRE CONDICIONES: Que juego sea valido y este incializado
+ * POST CONDICIONES: Llena la matriz dada con los elementos presentes en el juego y las paredes del laberinto.
  */
 void actualizar_laberinto(juego_t juego, char laberinto[TAMANIO][TAMANIO]);
 
 /*
  * Mostrará el laberinto por pantalla.
+ *
+ * PRE CONDICIONES: Que laberinto[][] tenga valores validos
+ * POST CONDICIONES: Muestra la matriz dada por pantalla
  */
 void mostrar_laberinto(char laberinto[TAMANIO][TAMANIO]);
 

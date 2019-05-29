@@ -15,6 +15,11 @@ typedef struct direccion {
 
 /* Constantes del juego */
 
+#define TECLA_ARRIBA 'w'
+#define TECLA_ABAJO 's'
+#define TECLA_IZQUIERDA 'a'
+#define TECLA_DERECHA 'd'
+#define CODIGO_COPA 'C'
 const int VIDA_POR_TURNO = 3;
 const int INDICE_DERECHA = 0;
 const int INDICE_ABAJO = 1;
@@ -30,24 +35,33 @@ const direccion_t MOVIMIENTOS_DISPONIBLES[] =
 };
 
 /* Constantes del jugador */
+const char CODIGO_JUGADOR = 'J';
 const int DISTANCIA_MINIMA_COPA = 10;
 const int MAXIMA_VIDA_JUGADOR = 50;
 
 /* Constantes de los obstaculos */
+const char CODIGO_ESCREGUTO = 'E';
+const char CODIGO_ACROMANTULA = 'A';
+const char CODIGO_BOGGART = 'B';
 const int DANIO_ESGREGUTO = 20;
 const int DANIO_ACROMANTULA = 10;
 const int DANIO_BOGGART = 15;
 
 /* Constantes de las ayudas */
+const char CODIGO_ESFINGE = 'F';
+const char CODIGO_IMPEDIMENTA = 'I';
+const char CODIGO_RIDDIKULUS = 'R';
+const char CODIGO_POCION = 'P';
 const int VIDA_POCION = 15;
 
 /* Constantes para el rival */
+const char CODIGO_RIVAL = 'G';
 const int RIVAL_CANTIDAD_PASOS = 4;
 
 /* Funciones de posicion y direccion auxiliares */
 bool posicion_valida(int x, int y, char laberinto[TAMANIO][TAMANIO]);
 bool comparar_coordenadas(coordenada_t x, coordenada_t y);
-coordenada_t posicion_aleatoria_valida(char laberinto[TAMANIO][TAMANIO]);
+coordenada_t posicion_aleatoria_valida(juego_t juego);
 direccion_t tecla_a_direccion(char tecla);
 coordenada_t posicion_aleatoria_jugador(juego_t juego);
 
@@ -89,6 +103,8 @@ int distancia_manhattan(coordenada_t x, coordenada_t y);
  */
 void inicializar_laberinto(juego_t* juego)
 {
+    juego->tope_ayudas = 0;
+    juego->tope_obstaculos = 0;
     inicializar_paredes_laberinto(juego->laberinto_original);
     inicializar_copa(juego);
     inicializar_obstaculos(juego);
@@ -97,37 +113,55 @@ void inicializar_laberinto(juego_t* juego)
     inicializar_jugador(juego);
 }
 
+/*
+ * PRE CONDICIONES: Un juego_t valido
+ * POST CONDICIONES: Crea la copa y la posicion en una posicion valida
+ */
 void inicializar_copa(juego_t* juego)
 {
-    juego->copa = (copa_t) {CODIGO_COPA, posicion_aleatoria_valida(juego->laberinto_original)};
+    juego->copa = (copa_t) {CODIGO_COPA, posicion_aleatoria_valida(*juego)};
 }
 
+/*
+ * PRE CONDICIONES: Un juego_t valido
+ * POST CONDICIONES: Inicializa y añade todos los obstaculos en orden en posiciones aleatorias validas
+ */
 void inicializar_obstaculos(juego_t* juego)
 {
-    juego->tope_obstaculos = 0;
-    juego->obstaculos[(juego->tope_obstaculos)++] = (obstaculo_t) {CODIGO_ESCREGUTO, posicion_aleatoria_valida(juego->laberinto_original), DANIO_ESGREGUTO};
-    juego->obstaculos[(juego->tope_obstaculos)++] = (obstaculo_t) {CODIGO_ACROMANTULA, posicion_aleatoria_valida(juego->laberinto_original), DANIO_ACROMANTULA};
-    juego->obstaculos[(juego->tope_obstaculos)++] = (obstaculo_t) {CODIGO_BOGGART, posicion_aleatoria_valida(juego->laberinto_original), DANIO_BOGGART};
+    juego->obstaculos[(juego->tope_obstaculos)++] = (obstaculo_t) {CODIGO_ESCREGUTO, posicion_aleatoria_valida(*juego), DANIO_ESGREGUTO};
+    juego->obstaculos[(juego->tope_obstaculos)++] = (obstaculo_t) {CODIGO_ACROMANTULA, posicion_aleatoria_valida(*juego), DANIO_ACROMANTULA};
+    juego->obstaculos[(juego->tope_obstaculos)++] = (obstaculo_t) {CODIGO_BOGGART, posicion_aleatoria_valida(*juego), DANIO_BOGGART};
 }
 
+/*
+ * PRE CONDICIONES: Un juego_t valido
+ * POST CONDICIONES: Inicializa y añade todas las ayudas en posiciones aleatorias validas
+ */
 void inicializar_ayudas(juego_t* juego)
 {
-    juego->tope_ayudas = 0;
-    juego->ayudas[(juego->tope_ayudas)++] = (ayuda_t) {CODIGO_IMPEDIMENTA, posicion_aleatoria_valida(juego->laberinto_original), 0};
-    juego->ayudas[(juego->tope_ayudas)++] = (ayuda_t) {CODIGO_RIDDIKULUS, posicion_aleatoria_valida(juego->laberinto_original), 0};
+    juego->ayudas[(juego->tope_ayudas)++] = (ayuda_t) {CODIGO_IMPEDIMENTA, posicion_aleatoria_valida(*juego), 0};
+    juego->ayudas[(juego->tope_ayudas)++] = (ayuda_t) {CODIGO_RIDDIKULUS, posicion_aleatoria_valida(*juego), 0};
     /* Pociones */
-    juego->ayudas[(juego->tope_ayudas)++] = (ayuda_t) {CODIGO_POCION, posicion_aleatoria_valida(juego->laberinto_original), VIDA_POCION};
-    juego->ayudas[(juego->tope_ayudas)++] = (ayuda_t) {CODIGO_POCION, posicion_aleatoria_valida(juego->laberinto_original), VIDA_POCION};
-    juego->ayudas[(juego->tope_ayudas)++] = (ayuda_t) {CODIGO_POCION, posicion_aleatoria_valida(juego->laberinto_original), VIDA_POCION};
+    juego->ayudas[(juego->tope_ayudas)++] = (ayuda_t) {CODIGO_POCION, posicion_aleatoria_valida(*juego), VIDA_POCION};
+    juego->ayudas[(juego->tope_ayudas)++] = (ayuda_t) {CODIGO_POCION, posicion_aleatoria_valida(*juego), VIDA_POCION};
+    juego->ayudas[(juego->tope_ayudas)++] = (ayuda_t) {CODIGO_POCION, posicion_aleatoria_valida(*juego), VIDA_POCION};
     /* Esfinge */
-    juego->ayudas[(juego->tope_ayudas)++] = (ayuda_t) {CODIGO_ESFINGE, posicion_aleatoria_valida(juego->laberinto_original), 0};
+    juego->ayudas[(juego->tope_ayudas)++] = (ayuda_t) {CODIGO_ESFINGE, posicion_aleatoria_valida(*juego), 0};
 }
 
+/*
+ * PRE CONDICIONES: Un juego_t valido
+ * POST CONDICIONES: Inicializa al rival en una posicion valida, con un minimo de 10 unidades lejos de la copa
+ */
 void inicializar_rival(juego_t* juego)
 {
     juego->rival = (rival_t) {CODIGO_RIVAL, posicion_aleatoria_jugador(*juego), MOVIMIENTOS_DISPONIBLES[INDICE_DERECHA].tecla, 0};
 }
 
+/*
+ * PRE CONDICIONES: Un juego_t valido
+ * POST CONDICIONES: Inicializa al jugador en una posicion valida, con un minimo de 10 unidades lejos de la copa
+ */
 void inicializar_jugador(juego_t* juego)
 {
     juego->jugador = (jugador_t) {CODIGO_JUGADOR, MAXIMA_VIDA_JUGADOR, posicion_aleatoria_jugador(*juego), 0, {}};
@@ -147,6 +181,10 @@ bool es_movimiento_valido(juego_t* juego, char tecla)
     return posicion_valida(x, y, juego->laberinto_original);
 }
 
+/*
+ * PRE CONDICIONES: Que el laberinto[][] este inicializado y los ints sean validos
+ * POST CONDICIONES: Devuelve TRUE si la posicion esta dentro del laberinto y no es una pared, de caso contrario FALSE
+ */
 bool posicion_valida(int x, int y, char laberinto[TAMANIO][TAMANIO])
 {
     return x >= 0 && y >= 0 && x < TAMANIO && y < TAMANIO && laberinto[x][y] == VACIO;
@@ -201,11 +239,19 @@ void actualizar_juego(juego_t* juego)
     }
 }
 
+/*
+ * PRE CONDICIONES: Que juego este inicializado
+ * POST CONDICIONES: Actualiza el turno del jugador, restandole vida
+ */
 void actualizar_turno(juego_t* juego)
 {
     juego->jugador.vida -= VIDA_POR_TURNO;
 }
 
+/*
+ * PRE CONDICIONES: Que juego este inicializado
+ * POST CONDICIONES: Actualiza y consume las ayudas del mapa
+ */
 void actualizar_ayudas(juego_t* juego)
 {
     for(int i = juego->tope_ayudas-1; i > -1; --i)
@@ -221,6 +267,10 @@ void actualizar_ayudas(juego_t* juego)
     }
 }
 
+/*
+ * PRE CONDICIONES: Que juego este inicializado
+ * POST CONDICIONES: Actualiza y consume los obstaculos del mapa
+ */
 void actualizar_obstaculos(juego_t* juego)
 {
     for(int i = juego->tope_obstaculos - 1; i > -1; --i)
@@ -279,11 +329,19 @@ void actualizar_laberinto(juego_t juego, char laberinto[TAMANIO][TAMANIO])
     copiar_jugador(juego.jugador, laberinto);
 }
 
+/*
+ * PRE CONDICIONES: Que jugador este inicializado
+ * POST CONDICIONES: Devuelve TRUE si la copa se debe dibujar (jugador con menos de 15 de vida o si tiene la esfinge)
+ */
 bool copa_visible(jugador_t jugador)
 {
     return jugador.vida <= 15 || tiene_ayuda(CODIGO_ESFINGE, jugador.ayudas, jugador.tope_ayudas);
 }
 
+/*
+ * PRE CONDICIONES: Que ambos laberintos sean validos
+ * POST CONDICIONES: Copia los elementos (las paredes) de un laberinto a otro
+ */
 void copiar_mapa(char original[TAMANIO][TAMANIO], char copia[TAMANIO][TAMANIO])
 {
     for(int i = 0; i < TAMANIO; ++i)
@@ -295,6 +353,10 @@ void copiar_mapa(char original[TAMANIO][TAMANIO], char copia[TAMANIO][TAMANIO])
     }
 }
 
+/*
+ * PRE CONDICIONES: Que el vector de obstaculos y el laberinto sean validos
+ * POST CONDICIONES: Llena el laberinto con los codigos de los obstaculos en las posiciones donde estan
+ */
 void copiar_obstaculos(obstaculo_t obstaculos[TOTAL_OBSTACULOS], int tope_obstaculos, char copia[TAMANIO][TAMANIO])
 {
     for(int i = 0; i < tope_obstaculos; ++i)
@@ -303,6 +365,10 @@ void copiar_obstaculos(obstaculo_t obstaculos[TOTAL_OBSTACULOS], int tope_obstac
     }
 }
 
+/*
+ * PRE CONDICIONES: Que el vector de obstaculos y el laberinto sean validos
+ * POST CONDICIONES: Llena el laberinto con los codigos de las ayudas en las posiciones donde estan
+ */
 void copiar_ayudas(ayuda_t ayudas[TOTAL_AYUDAS], int tope_ayudas, char copia[TAMANIO][TAMANIO])
 {
     for(int i = 0; i < tope_ayudas; ++i)
@@ -311,17 +377,28 @@ void copiar_ayudas(ayuda_t ayudas[TOTAL_AYUDAS], int tope_ayudas, char copia[TAM
     }
 }
 
+/*
+ * PRE CONDICIONES: Que el rival y el laberinto sean validos
+ * POST CONDICIONES: Marca en el laberinto la posicion del rival utilizando su codigo
+ */
 void copiar_rival(rival_t rival, char copia[TAMANIO][TAMANIO])
 {
     copia[rival.posicion.fil][rival.posicion.col] = rival.codigo;
 }
 
-
+/*
+ * PRE CONDICIONES: Que el jugador y el laberinto sean validos
+ * POST CONDICIONES: Marca en el laberinto la posicion del jugador utilizando su codigo
+ */
 void copiar_jugador(jugador_t jugador, char copia[TAMANIO][TAMANIO])
 {
     copia[jugador.posicion.fil][jugador.posicion.col] = jugador.codigo;
 }
 
+/*
+ * PRE CONDICIONES: Que la copa y el laberinto sean validos
+ * POST CONDICIONES: Marca en el laberinto la posicion de la copa utilizando su codigo
+ */
 void copiar_copa(copa_t copa, char copia[TAMANIO][TAMANIO])
 {
     copia[copa.posicion.fil][copa.posicion.col] = copa.codigo;
@@ -343,24 +420,36 @@ void mostrar_laberinto(char laberinto[TAMANIO][TAMANIO])
 }
 
 /*
- * Metodos Auxiliares
+ * PRE CONDICIONES: Un obstaculo_t inicializado
+ * POST CONDICIONES: Devuelve TRUE si el obstaculo_t es un boggart o FALSE en caso contrario
  */
-
 bool es_boggart(obstaculo_t obstaculo)
 {
     return obstaculo.codigo == CODIGO_BOGGART;
 }
 
+/*
+ * PRE CONDICIONES: Un obstaculo_t inicializado
+ * POST CONDICIONES: Devuelve TRUE si el obstaculo_t es un escreguto o FALSE en caso contrario
+ */
 bool es_escreguto(obstaculo_t obstaculo)
 {
     return obstaculo.codigo == CODIGO_ESCREGUTO;
 }
 
+/*
+ * PRE CONDICIONES: Una ayuda_t inicializada
+ * POST CONDICIONES: Devuelve TRUE si la ayuda_t es una pocion o FALSE en caso contrario
+ */
 bool es_pocion(ayuda_t ayuda)
 {
     return ayuda.codigo == CODIGO_POCION;
 }
 
+/*
+ * PRE CONDICIONES: Un indice valido dentro del vector
+ * POST CONDICIONES: Remueve la ayuda que hay en el indice dado dentro del vector dado.
+ */
 void remover_ayuda(int indice, ayuda_t ayudas[TOTAL_AYUDAS], int* tope_ayudas)
 {
     for(int i = indice; i < (*tope_ayudas) - 1; ++i)
@@ -370,6 +459,10 @@ void remover_ayuda(int indice, ayuda_t ayudas[TOTAL_AYUDAS], int* tope_ayudas)
     (*tope_ayudas)--;
 }
 
+/*
+ * PRE CONDICIONES: Un indice valido dentro del vector
+ * POST CONDICIONES: Remueve el obstaculo que hay en el indice dado dentro del vector dado.
+ */
 void remover_obstaculo(int indice, obstaculo_t obstaculos[TOTAL_OBSTACULOS], int* tope_obstaculos)
 {
     for(int i = indice; i < (*tope_obstaculos) - 1; ++i)
@@ -379,33 +472,70 @@ void remover_obstaculo(int indice, obstaculo_t obstaculos[TOTAL_OBSTACULOS], int
     (*tope_obstaculos)--;
 }
 
+/*
+ * PRE CONDICIONES: Recibir coordenadas inicializadas
+ * POST CONDICIONES: Devuelve TRUE si son iguales o FALSE en caso contrario
+ */
 bool comparar_coordenadas(coordenada_t x, coordenada_t y)
 {
     return x.fil == y.fil && y.col == x.col;
 }
 
-coordenada_t posicion_aleatoria_valida(char laberinto[TAMANIO][TAMANIO])
+/*
+ * PRE CONDICIONES: Recibir juego y coordenada inicializados
+ * POST CONDICIONES: Devuelve TRUE si la posicion no esta siendo utilizada por ningun elemento del juego o FALSE en caso contrario
+ */
+bool posicion_utilizada(juego_t juego, coordenada_t coordenada)
+{
+    for(int i = 0; i < juego.tope_ayudas; ++i)
+    {
+        if(comparar_coordenadas(juego.ayudas[i].posicion, coordenada))
+            return true;
+    }
+    for(int i = 0; i < juego.tope_obstaculos; ++i)
+    {
+        if(comparar_coordenadas(juego.obstaculos[i].posicion, coordenada))
+            return true;
+    }
+    return comparar_coordenadas(juego.rival.posicion, coordenada)
+        || comparar_coordenadas(juego.copa.posicion, coordenada)
+        || comparar_coordenadas(juego.jugador.posicion, coordenada);
+}
+
+/*
+ * PRE CONDICIONES: Un juego inicializado correctamente y que exista una posicion libre en el mapa
+ * POST CONDICIONES: Devuelve una posicion aleatoria que sea valida y no utilizada
+ */
+coordenada_t posicion_aleatoria_valida(juego_t juego)
 {
     coordenada_t coordenada;
     do
     {
         coordenada = posicion_aleatoria();
     }
-    while(!posicion_valida(coordenada.fil, coordenada.col, laberinto));
+    while(!posicion_valida(coordenada.fil, coordenada.col, juego.laberinto_original) || posicion_utilizada(juego, coordenada));
     return coordenada;
 }
 
+/*
+ * PRE CONDICIONES: Recibir un objeto juego_t valido
+ * POST CONDICIONES: Devuelve una posicion aleatoria que este a > 10 de la copa, en distancia manhattan
+ */
 coordenada_t posicion_aleatoria_jugador(juego_t juego)
 {
     coordenada_t coordenada;
     do
     {
-        coordenada = posicion_aleatoria_valida(juego.laberinto_original);
+        coordenada = posicion_aleatoria_valida(juego);
     }
     while(distancia_manhattan(coordenada, juego.copa.posicion) <= DISTANCIA_MINIMA_COPA);
     return coordenada;
 }
 
+/*
+ * PRE CONDICIONES: Recibir un codigo de ayuda y vector de ayudas valido
+ * POST CONDICIONES: Devuelve un bool que representa si el vector tiene esa ayuda.
+ */
 bool tiene_ayuda(char codigo, ayuda_t ayudas[TOTAL_AYUDAS], int tope_ayudas)
 {
     for(int i = 0; i < tope_ayudas; ++i)
@@ -416,7 +546,10 @@ bool tiene_ayuda(char codigo, ayuda_t ayudas[TOTAL_AYUDAS], int tope_ayudas)
     return false;
 }
 
-
+/*
+ * PRE CONDICIONES: La tecla dada debe ser una de las que se usan como controles
+ * POST CONDICIONES: Devuelve la direccion_t correspondiente a esa tecla
+ */
 direccion_t tecla_a_direccion(char tecla)
 {
     for(int i = 0; i < TOTAL_DIRECCIONES; ++i)
@@ -429,16 +562,28 @@ direccion_t tecla_a_direccion(char tecla)
 
 /* Utilidades matematicas */
 
+/*
+ * PRE CONDICIONES: Un par de ints validos
+ * POST CONDICIONES: Devuelve el menor de ambos ints dados
+ */
 int min(int x, int y)
 {
     return x < y ? x : y;
 }
 
+/*
+ * PRE CONDICIONES: Un int valido
+ * POST CONDICIONES: Devuelve el valor absoluto del numero dado
+ */
 int absoluto(int x)
 {
     return x > 0 ? x : -x;
 }
 
+/*
+ * PRE CONDICIONES: Un par de coordenadas inicializados
+ * POST CONDICIONES: Calcula la distancia manhattan entre ellas y lo devuelve como int
+ */
 int distancia_manhattan(coordenada_t x, coordenada_t y)
 {
     return absoluto(x.fil - y.fil) + absoluto(x.col - y.col);

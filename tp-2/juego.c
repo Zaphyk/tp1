@@ -4,6 +4,10 @@
 
 const int LIMPIEZA_PANTALLA_LINEAS = 512;
 
+/*
+ * PRE CONDICIONES: Ninguna
+ * POST CONDICIONES: Crea el objeto juego de tipo juego_t, lo inicializa y lo devuelve
+ */
 juego_t inicializar_juego()
 {
     juego_t juego;
@@ -11,26 +15,43 @@ juego_t inicializar_juego()
     return juego;
 }
 
+/*
+ * PRE CONDICIONES: Que el usuario ingrese un char valido
+ * POST CONDICIONES: Lee una tecla ingresada por el usuario
+ */
 void leer_tecla(char* tecla)
 {
     scanf("%c", tecla);
 }
 
+/*
+ * PRE CONDICIONES: Que resultado sea 1 si el usuario gano
+ * POST CONDICIONES: Muestra por pantalla el resultado del juego
+ */
 void mostrar_resultado(int resultado)
 {
     printf("\n%s\n", resultado == 1 ? "HAS GANADO" : "HAS PERDIDO");
 }
 
-/* Esto mas que nada es algo cosmetico para que no se encime la interfaz */
+/*
+ * PRE CONDICIONES: Ninguna
+ * POST CONDICIONES: Limpia la pantalla de la consola para que cuando se dibuje no se vea lo anterior.
+ *
+ * Esto se que queda un poco feo pero es mas que nada es algo cosmetico para que no se encime la interfaz
+ */
 void limpiar_pantalla()
 {
-    /* En vez de usar system("bash -c clear"); mando varios \n */
+    /* En vez de usar system("clear"); mando varios newlines  */
     for(int i = 0; i < LIMPIEZA_PANTALLA_LINEAS; ++i)
     {
         printf("\n");
     }
 }
 
+/*
+ * PRE CONDICIONES: Recibir un juego valido e inicializado
+ * POST CONDICIONES: Dibuja la interfaz superior del juego (vida, ayudas)
+ */
 void dibujar_interfaz(juego_t juego)
 {
     printf("--- TORNEO DE LOS MAGOS ---- \n");
@@ -51,23 +72,16 @@ void dibujar_interfaz(juego_t juego)
     printf("\n\n");
 }
 
-void dibujar_ayuda()
-{
-    printf("\n\n");
-    printf("CONTROLES: Arriba - %c, Abajo - %c, Izquierda - %c, Derecha -%c\n", TECLA_ARRIBA, TECLA_ABAJO, TECLA_IZQUIERDA, TECLA_DERECHA);
-    printf("AYUDAS: Esfinge - %c, Riddikulus - %c, Pocion - %c, Impedimenta - %c\n", CODIGO_ESFINGE, CODIGO_RIDDIKULUS, CODIGO_POCION, CODIGO_IMPEDIMENTA);
-    printf("OBSTACULOS: Boggart - %c, Escreguto de cola explosiva - %c, Acromantula - %c\n", CODIGO_BOGGART, CODIGO_ESCREGUTO, CODIGO_ACROMANTULA);
-    printf("OBJETOS: Rival - %c, Jugador - %c, Copa - %c\n", CODIGO_RIVAL, CODIGO_JUGADOR, CODIGO_COPA);
-    printf("\n\n");
-}
-
+/*
+ * PRE CONDICIONES: Recibir un juego y laberinto validos
+ * POST CONDICIONES: Dibuja toda la interfaz del juego
+ */
 void dibujar(juego_t juego, char laberinto_temporal[TAMANIO][TAMANIO])
 {
     actualizar_laberinto(juego, laberinto_temporal);
     limpiar_pantalla();
     dibujar_interfaz(juego);
     mostrar_laberinto(laberinto_temporal);
-    dibujar_ayuda();
 }
 
 int main()

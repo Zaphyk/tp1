@@ -16,7 +16,7 @@ int calcular_tope(char* string)
 	{
 		tope++;
 	}
-	return tope;
+	return tope+1;
 }
 
 void slice(char* array, char resultado[], int empieza, int termina)
@@ -31,14 +31,14 @@ fecha_t parsear_fecha(char* string)
 {
 	fecha_t fecha = {.es_valida = false};
 	int tope = calcular_tope(string);
-	if(tope != 6) return fecha;
+	if(tope != MAX_FECHA) return fecha;
 
 	char anio_str[4];
 	slice(string, anio_str, 0, 4);
 	fecha.anio = atoi(anio_str);
 
 	char mes_str[2];
-	slice(string, mes_str, 4, 6);
+	slice(string, mes_str, 4, MAX_FECHA-1);
 	fecha.mes = atoi(mes_str);
 
 	fecha.es_valida = fecha.mes > 0 && fecha.mes < 13;

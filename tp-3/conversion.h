@@ -3,6 +3,8 @@
 
 #include <stdbool.h>
 
+#define MAX_FECHA 7
+
 #define COMANDO_PERDONABLES 0
 #define COMANDO_LIBERAR 1
 #define COMANDO_ACTUALIZAR 2

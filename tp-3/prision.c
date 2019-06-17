@@ -3,6 +3,7 @@
 #include <stdio.h>
 
 #define MAX_NOMBRE 200
+
 typedef struct preso {
 	char nombre[MAX_NOMBRE];
 	unsigned int edad;
@@ -12,6 +13,62 @@ typedef struct preso {
 	char fecha[MAX_FECHA];
 	int maldicion_realizada;
 } preso_t;
+
+typedef struct procesador_comando {
+	int tipo;
+	void (*ejecutor)(char**, int);
+} procesador_comando_t;
+
+void procesar_perdonables(char** parametros, int tope);
+void procesar_liberar(char** parametros, int tope);
+void procesar_actualizar(char** parametros, int tope);
+void procesar_mostrar_liberados(char** parametros, int tope);
+void procesar_ayuda(char** parametros, int tope);
+
+const procesador_comando_t PROCESADORES[] =
+{
+	(procesador_comando_t) {COMANDO_PERDONABLES, &procesar_perdonables},
+	(procesador_comando_t) {COMANDO_LIBERAR, &procesar_liberar},
+	(procesador_comando_t) {COMANDO_ACTUALIZAR, &procesar_actualizar},
+	(procesador_comando_t) {COMANDO_MOSTRAR_LIBERADOS, &procesar_mostrar_liberados},
+	(procesador_comando_t) {COMANDO_AYUDA, &procesar_ayuda}
+};
+
+void ejecutar_comando(int tipo, char** parametros, int tope)
+{
+	procesador_comando_t procesador;
+	for(int i = 0; i < TOTAL_COMANDOS; ++i)
+	{
+		if(PROCESADORES[i].tipo == tipo)
+			procesador = PROCESADORES[i];
+	}
+	(*(procesador.ejecutor))(parametros, tope);
+}
+
+void procesar_perdonables(char** parametros, int tope)
+{
+
+}
+
+void procesar_liberar(char** parametros, int tope)
+{
+
+}
+
+void procesar_actualizar(char** parametros, int tope)
+{
+
+}
+
+void procesar_mostrar_liberados(char** parametros, int tope)
+{
+
+}
+
+void procesar_ayuda(char** parametros, int tope)
+{
+	mostrar_ayuda();
+}
 
 void mostrar_ayuda()
 {
@@ -35,9 +92,4 @@ void mostrar_ayuda()
 	{
 		printf("\t%s\t\t%s\n", comandos[i], descripciones[i]);
 	}
-}
-
-void procesar_comando(int tipo, char** parametros, int tope)
-{
-
 }

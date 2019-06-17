@@ -17,7 +17,6 @@ bool validar_parametros_mostrar_liberados(comando_t comando);
 bool validar_parametros_ayuda(comando_t comando);
 
 const int MAX_PARAMETROS = 4;
-const int COMANDOS_DISPONIBLES_TOTAL = 5;
 const estructura_comando_t COMANDOS_DISPONIBLES[] =
 {
 	(estructura_comando_t) {true, "perdonables", COMANDO_PERDONABLES, &validar_parametros_perdonables},
@@ -29,7 +28,7 @@ const estructura_comando_t COMANDOS_DISPONIBLES[] =
 
 estructura_comando_t parsear_nombre(char* nombre)
 {
-	for(int i = 0; i < COMANDOS_DISPONIBLES_TOTAL; ++i) {
+	for(int i = 0; i < TOTAL_COMANDOS; ++i) {
 		if(strcmp(nombre, COMANDOS_DISPONIBLES[i].nombre) == 0)
 			return COMANDOS_DISPONIBLES[i];
 	}

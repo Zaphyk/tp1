@@ -3,6 +3,6 @@
 
 
 void mostrar_ayuda();
-void procesar_comando(int tipo, char** parametros, int tope);
+void ejecutar_comando(int tipo, char** parametros, int tope);
 
 #endif

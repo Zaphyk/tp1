@@ -16,14 +16,14 @@ typedef struct preso {
 
 typedef struct procesador_comando {
 	int tipo;
-	void (*ejecutor)(char**, int);
+	void (*ejecutor)(char**);
 } procesador_comando_t;
 
-void procesar_perdonables(char** parametros, int tope);
-void procesar_liberar(char** parametros, int tope);
-void procesar_actualizar(char** parametros, int tope);
-void procesar_mostrar_liberados(char** parametros, int tope);
-void procesar_ayuda(char** parametros, int tope);
+void procesar_perdonables(char** parametros);
+void procesar_liberar(char** parametros);
+void procesar_actualizar(char** parametros);
+void procesar_mostrar_liberados(char** parametros);
+void procesar_ayuda(char** parametros);
 
 const procesador_comando_t PROCESADORES[] =
 {
@@ -34,7 +34,10 @@ const procesador_comando_t PROCESADORES[] =
 	(procesador_comando_t) {COMANDO_AYUDA, &procesar_ayuda}
 };
 
-void ejecutar_comando(int tipo, char** parametros, int tope)
+const char* PRESOS_CRUCIO = "crucio.dat";
+const char* PRESOS_IMPERIUS = "imperius.dat";
+
+void ejecutar_comando(int tipo, char** parametros)
 {
 	procesador_comando_t procesador;
 	for(int i = 0; i < TOTAL_COMANDOS; ++i)
@@ -42,30 +45,35 @@ void ejecutar_comando(int tipo, char** parametros, int tope)
 		if(PROCESADORES[i].tipo == tipo)
 			procesador = PROCESADORES[i];
 	}
-	(*(procesador.ejecutor))(parametros, tope);
+	(*(procesador.ejecutor))(parametros);
 }
 
-void procesar_perdonables(char** parametros, int tope)
+void procesar_perdonables(char** parametros)
+{
+	/*char* nombre_archivo = parametros[0];
+	FILE* ptr = fopen(nombre_archivo, 'w');
+	if(ptr != NULL){
+
+	}
+	fclose(ptr);*/
+}
+
+void procesar_liberar(char** parametros)
 {
 
 }
 
-void procesar_liberar(char** parametros, int tope)
+void procesar_actualizar(char** parametros)
 {
 
 }
 
-void procesar_actualizar(char** parametros, int tope)
+void procesar_mostrar_liberados(char** parametros)
 {
-
+	//fecha_t fecha = parsear_fecha(parametros[0]);
 }
 
-void procesar_mostrar_liberados(char** parametros, int tope)
-{
-
-}
-
-void procesar_ayuda(char** parametros, int tope)
+void procesar_ayuda(char** parametros)
 {
 	mostrar_ayuda();
 }

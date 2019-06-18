@@ -10,7 +10,7 @@ int main(int argc, char** argv)
 	}
 	else
 	{
-		ejecutar_comando(comando.tipo, comando.parametros, comando.tope_parametros);
+		ejecutar_comando(comando.tipo, comando.parametros);
 	}
 	return 0;
 }

@@ -170,6 +170,57 @@ int procesar_liberar(char** parametros)
 
 int procesar_actualizar(char** parametros)
 {
+	/*
+	fecha_t fecha_pedida = parsear_fecha(parametros[0]);
+	char nombre_liberados[MAX_NOMBRE_LIBERADOS];
+	crear_nombre_liberados(nombre_liberados, fecha_pedida.texto);
+
+	FILE* crucio = fopen(ARCHIVO_CRUCIO, "r+");
+	FILE* imperius = fopen(ARCHIVO_IMPERIUS, "r+");
+	FILE* liberados = fopen(nombre_liberados, "r");
+
+	if (crucio == NULL || imperius == NULL || liberados == NULL)
+	{
+		if(crucio != NULL) fclose(crucio);
+		if(imperius != NULL) fclose(imperius);
+		if(liberados != NULL) fclose(liberados);
+		return -1;
+	}
+
+	preso_t preso_crucio;
+	preso_t preso_imperius;
+	size_t leidos_crucio = leer_preso(&preso_crucio, crucio);
+	size_t leidos_imperius = leer_preso(&preso_imperius, imperius);
+	long int posicion_crucio = 0;
+	long int posicion_imperius = 0;
+	int leidos = fscanf(liberados, LIBERADOS_FORMATO, nombre);
+	char nombre[MAX_NOMBRE];
+	while(leidos_imperius > 0 || leidos_crucio > 0)
+	{
+		while(leidos_imperius > 0 && (strcmp(nombre, preso_imperius.nombre) > 0 || leidos <= 0))
+		{
+			escribir_posicion(&preso_imperius, &posicion_imperius, imperius);
+			leidos_imperius = leer_preso(&preso_imperius, imperius);
+		}
+		if (leidos_imperius > 0 && strcmp(nombre, preso_imperius.nombre) == 0)
+			leidos_imperius = leer_preso(&preso_imperius, imperius);
+
+
+		while(leidos_crucio > 0 && (strcmp(nombre, preso_crucio.nombre) > 0 || leidos <= 0))
+		{
+			escribir_posicion(&preso_crucio, &posicion_crucio, crucio);
+			leidos_crucio = leer_preso(&preso_crucio, crucio);
+		}
+		if (leidos_crucio > 0 && strcmp(nombre, preso_crucio.nombre) == 0)
+			leidos_crucio = leer_preso(&preso_crucio, crucio);
+
+		leidos = fscanf(liberados, LIBERADOS_FORMATO, nombre);
+	}
+
+	fclose(liberados);
+	fclose(crucio);
+	fclose(imperius);
+	*/
 	return 0;
 }
 

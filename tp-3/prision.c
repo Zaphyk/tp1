@@ -47,7 +47,7 @@ const char* LIBERADOS_FORMATO_LECTURA = "%[^\n]\n";
 
 /*
  * PRE CONDICIONES: Un tipo de comando valido y un char** con parametros ya validados
- * POST CONDICIONES: Ejecuta el comando dado.
+ * POST CONDICIONES: Ejecuta el comando dado. Escribe un mensaje de error si falla.
  */
 void ejecutar_comando(int tipo, char** parametros)
 {
@@ -196,6 +196,7 @@ int reemplazar_archivo(const char* src, const char* dst)
 		return -1;
 	if(rename(src, dst) != 0)
 		return -1;
+	return 0;
 }
 
 /*
@@ -205,7 +206,6 @@ int reemplazar_archivo(const char* src, const char* dst)
 int procesar_actualizar(char** parametros)
 {
 	fecha_t fecha_pedida = parsear_fecha(parametros[0]);
-	procesar_mostrar_liberados(parametros);
 	char nombre_liberados[MAX_NOMBRE_LIBERADOS];
 	crear_nombre_liberados(nombre_liberados, fecha_pedida.texto);
 
@@ -236,17 +236,14 @@ int procesar_actualizar(char** parametros)
 		while(leidos_crucio > 0 && strcmp(nombre, preso_crucio.nombre) >= 0)
 		{
 			if(strcmp(nombre, preso_crucio.nombre) != 0)
-			{
 				escribir_preso(&preso_crucio, crucio_w);
-			}
 			leidos_crucio = leer_preso(&preso_crucio, crucio_r);
 		}
 
 		while(leidos_imperius > 0 && strcmp(nombre, preso_imperius.nombre) >= 0)
 		{
-			if(strcmp(nombre, preso_imperius.nombre) != 0){
+			if(strcmp(nombre, preso_imperius.nombre) != 0)
 				escribir_preso(&preso_imperius, imperius_w);
-			}
 			leidos_imperius = leer_preso(&preso_imperius, imperius_r);
 		}
 	}

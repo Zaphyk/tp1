@@ -30,7 +30,7 @@ void slice(char* array, char* resultado, int empieza, int termina)
 
 fecha_t parsear_fecha(char* string)
 {
-	fecha_t fecha = {.es_valida = false};
+	fecha_t fecha = {.es_valida = false, .texto = string};
 	int tope = calcular_tope(string);
 
 	if(tope != MAX_FECHA-1) return fecha;
@@ -57,6 +57,19 @@ int parsear_conducta(char* conducta)
 			return i;
 	}
 	return -1;
+}
+
+int comparar_fechas(fecha_t fecha1, fecha_t fecha2)
+{
+	if (fecha1.anio < fecha2.anio)
+		return -1;
+	else if (fecha1.anio > fecha2.anio)
+		return 1;
+	if (fecha1.mes < fecha2.mes)
+		return -1;
+	else if (fecha1.mes > fecha2.mes)
+		return 1;
+	return 0;
 }
 
 bool fecha_valida(char* fecha)

@@ -23,11 +23,13 @@ typedef struct fecha {
 	bool es_valida;
 	int anio;
 	int mes;
+	char* texto;
 } fecha_t;
 
 fecha_t parsear_fecha(char* fecha);
 int parsear_conducta(char* conducta);
 bool fecha_valida(char* fecha);
 bool conducta_valida(char* conducta);
+int comparar_fechas(fecha_t fecha1, fecha_t fecha2);
 
 #endif

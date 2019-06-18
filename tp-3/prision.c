@@ -61,7 +61,7 @@ size_t leer_preso(preso_t* preso, FILE* archivo)
 
 void escribir_preso(preso_t* preso, FILE* archivo)
 {
-	fwrite(preso, sizeof(preso), 1, archivo);
+	fwrite(preso, sizeof(preso_t), 1, archivo);
 }
 
 int procesar_perdonables(char** parametros)
@@ -153,7 +153,7 @@ int procesar_liberar(char** parametros)
 
 	preso_t preso;
 	size_t leidos;
-	while ((leidos = leer_preso(&preso, perdonables)))
+	while ((leidos = leer_preso(&preso, perdonables)) > 0)
 	{
 		int conducta = parsear_conducta(&(preso.conducta));
 		fecha_t fecha = parsear_fecha(preso.fecha);
@@ -184,10 +184,10 @@ int procesar_mostrar_liberados(char** parametros)
 
 	int leidos;
 	char nombre[MAX_NOMBRE];
-	printf("Presos a liberar en '%s'\n", fecha_pedida.texto);
-	while((leidos = fscanf(liberados, LIBERADOS_FORMATO, nombre)))
+	printf("Presos a liberar en '%s':\n", fecha_pedida.texto);
+	while((leidos = fscanf(liberados, LIBERADOS_FORMATO, nombre)) > 0)
 	{
-		printf("%s\n", nombre);
+		printf(" * %s\n", nombre);
 	}
 	fclose(liberados);
 	return 0;

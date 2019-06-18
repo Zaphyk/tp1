@@ -26,6 +26,10 @@ const estructura_comando_t COMANDOS_DISPONIBLES[] =
 	(estructura_comando_t) {true, "ayuda", COMANDO_AYUDA, &validar_parametros_ayuda}
 };
 
+/*
+ * PRE CONDICIONES: Un nombre bien formado.
+ * POST CONDICIONES: Devuelve un estructura_comando_t a partir del nombre del comando.
+ */
 estructura_comando_t parsear_nombre(char* nombre)
 {
 	for(int i = 0; i < TOTAL_COMANDOS; ++i) {
@@ -35,6 +39,10 @@ estructura_comando_t parsear_nombre(char* nombre)
 	return (estructura_comando_t) {};
 }
 
+/*
+ * PRE CONDICIONES: Que argc tenga la cantidad de argumentos y argv los argumentos.
+ * POST CONDICIONES: Devuelve un comando_t con los parametros validados en caso de estar todo bien o en su defecto un comando_t no valido.
+ */
 comando_t validar_estructura(int argc, char** argv)
 {
 	comando_t comando = { .es_valido = false };
@@ -58,26 +66,46 @@ comando_t validar_estructura(int argc, char** argv)
 	return comando;
 }
 
+/*
+ * PRE CONDICIONES: Que el comando dado haya sido inicializado.
+ * POST CONDICIONES: Valida los parametros del comando perdonables
+ */
 bool validar_parametros_perdonables(comando_t comando)
 {
 	return comando.tope_parametros == 1;
 }
 
+/*
+ * PRE CONDICIONES: Que el comando dado haya sido inicializado.
+ * POST CONDICIONES: Valida los parametros del comando liberar
+ */
 bool validar_parametros_liberar(comando_t comando)
 {
 	return comando.tope_parametros == 3 && fecha_valida(comando.parametros[1]) && conducta_valida(comando.parametros[2]);
 }
 
+/*
+ * PRE CONDICIONES: Que el comando dado haya sido inicializado.
+ * POST CONDICIONES: Valida los parametros del comando actualizar
+ */
 bool validar_parametros_actualizar(comando_t comando)
 {
 	return comando.tope_parametros == 1 && fecha_valida(comando.parametros[0]);
 }
 
+/*
+ * PRE CONDICIONES: Que el comando dado haya sido inicializado.
+ * POST CONDICIONES: Valida los parametros del comando mostrar_liberados
+ */
 bool validar_parametros_mostrar_liberados(comando_t comando)
 {
 	return comando.tope_parametros == 1 && fecha_valida(comando.parametros[0]);
 }
 
+/*
+ * PRE CONDICIONES: Que el comando dado haya sido inicializado.
+ * POST CONDICIONES: Valida los parametros del comando ayuda
+ */
 bool validar_parametros_ayuda(comando_t comando)
 {
 	return comando.tope_parametros == 0;
